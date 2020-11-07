@@ -49,11 +49,6 @@ int manacher(string s){
 int32_t main()
 {
     boost;
-    #ifndef ONLINE_JUDGE
-        freopen("input.txt","r",stdin);
-        freopen("output.txt","w",stdout);
-    #endif // ONLINE_JUDGE
-
     int t;
     cin>>t;
     while(t--){

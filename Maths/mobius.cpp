@@ -1,6 +1,6 @@
 
 
-int mu[N],prime[N];
+int mu[N], prime[N];
 void mobius() {
 	fill_n(mu, N , 1);
 	memset(prime, true, sizeof prime);

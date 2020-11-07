@@ -15,9 +15,9 @@ void r_cgraph(int n,int m,bool weight);
 void r_graph(int n,int m,bool weight);
 void r_dgraph(int n,int m,bool weight);
 
-const int N = 5;
-const int M =10;
-const int A = 5;
+const int N = 20;
+const int M = 10;
+const int A = 1000;
 const int C = 1;
 
 int32_t main() {	
@@ -27,14 +27,14 @@ int32_t main() {
     #endif // ONLINE_JUDGE
 	srand(time(0));
 	
-	int t = 5;// + rand()%10;
+	int t = 15;// + rand()%10;
 	cout<<t<<endl;
 	while(t--){
-		int n = 5;
-		int m = r(n * (n - 1) / 2);
-		cout << n << ' ' << m << endl; 
-		r_dgraph(n, m, 0);
-		cout << endl;
+		int l = r(N);
+		int rr = r(N);
+		if(l > rr)
+			swap(l, rr);
+		cout << l << ' ' << rr << endl;
 	}
 	return 0;
 }

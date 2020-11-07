@@ -26,8 +26,8 @@ int query(int val){
     for(int i=N;i>=0;i--){
         int it = (val>>i)&1ll;
         if(cur->ptr[1-it] != nullptr){
-            ans+=(1ll<<i);
-            cur = cur->ptr[1-it];
+            ans |= (1ll<<i);
+            cur = cur -> ptr[1-it];
         }
         else if(cur->ptr[it] != nullptr)
             cur = cur -> ptr[it];

@@ -1,70 +1,48 @@
-struct Mos_Algorithm
-{
-    vector<ll>cnt;
-    ll cur_ans=1;
-    int BLOCK_SIZE,n,q;
-    ll cnt[MAX];
 
-    void init(int n1,int q1)
-    {
-      n=n1;
-      q=q1;
-      memset(cnt,0,sizeof cnt);
-    }
+int block_size=200;
 
-    bool mo_cmp(TP x,TP &y)
-    {
-        int block_x = x.ft/ BLOCK_SIZE;
-        int block_y = y.ft/ BLOCK_SIZE;
-        if(block_x != block_y)
-            return block_x < block_y;
-        return x.first.second < y.first.second;
-    }
+struct Query {
+	int l, r, idx;
+	int k;
+	bool operator < (Query other) const{
+		if (l / block_size != other.l / block_size)
+			return l < other.l;
+		return (l / block_size & 1) ? (r < other.r) : (r > other.r);
+	}
+};
 
-    void add(int x)
-    {
-        cur_ans -= cnt[x] * cnt[x] * x;
-        cnt[x]++;
-        cur_ans+= cnt[x] * cnt[x] * x;
-    }
+vector<int> mo_s_algorithm(vector<Query> queries) {
+	vector<int> answers(queries.size());
+	sort(queries.begin(), queries.end());
 
-    void remove(int x)
-    {
-        cur_ans -= cnt[x] * cnt[x] * x;
-        cnt[x]--;
-        cur_ans += cnt[x] * cnt[x] * x;
-    }
+	// TODO: initialize data structure
 
-    void mos()
-    {
-        sort(queries.begin(), queries.end(), mo_cmp);
-        int ml=0,mr=n-1;
-        for(int i=0;i<q;i++)
-        {
-            int l,r;
-            l=queries[i].ft;
-            r=queries[i].st;
+	int cur_l = 0;
+	int cur_r = -1;
+	// invariant: data structure will always reflect the range [cur_l, cur_r]
+	for (Query q : queries) {
+		while (cur_l > q.l) {
+			cur_l--;
+			add(cur_l);
+		}
+		while (cur_r < q.r) {
+			cur_r++;
+			add(cur_r);
+		}
+		while (cur_l < q.l) {
+			remove(cur_l);
+			cur_l++;
+		}
+		while (cur_r > q.r) {
+			remove(cur_r);
+			cur_r--;
+		}
+		answers[q.idx] = get_answer(root,q.k);
+	}
+	return answers;
+}
 
-            while(mr < r) {
-                mr++;
-                add(a[mr]);
-            }
-            while(mr > r) {
-                remove(a[mr]);
-                mr--;
-            }
 
-            while(ml< l) {
-                remove(a[ml]);
-                ml++;
-            }
-            while(ml > l) {
-                ml--;
-                add(a[ml]);
-            }
-            ll tmp=modInverse(cur_ans,MOD);
-            ans[queries[i].ss] = mod(fact[r-l+1]*tmp);
-        }
-    }
-}MOS;
+
+
 

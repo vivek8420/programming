@@ -7,11 +7,8 @@ using namespace std;
 #define ss second
 #define boost ios::sync_with_stdio(false);cin.tie(nullptr)
 #define endl '\n'
-#define vi vector<int>
 
 int32_t main() {
-	boost;
-	int n, k;
-	cin >> n >> k;
-	cout << n << ' ' << k << endl;		
+    boost;
+    
 }

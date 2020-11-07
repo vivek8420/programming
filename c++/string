@@ -1,5 +1,19 @@
 
+
+//mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
+clock_t startTime,endTime;
+double CurrentTime() {
+   return (double)(clock() - startTime) / CLOCKS_PER_SEC;
+}
+
 /******* start debugger *******/
+
+#ifndef DEBUG
+#define debug(...) cerr << "[" << #__VA_ARGS__ << "]:", debug_out(__VA_ARGS__)
+#else
+#define debug(...) 42
+#endif
+
 template <typename A, typename B>
 string to_string(pair<A, B> p);
  
@@ -82,27 +96,8 @@ void debug_out(Head H, Tail... T) {
   debug_out(T...);
 }
 
-#ifdef LOCAL
-#define cerr cout
-#endif
-
-#define DEBUG
-
-#ifdef DEBUG
-#define debug(...) cerr << "[" << #__VA_ARGS__ << "]:", debug_out(__VA_ARGS__)
-#else
-#define debug(...) 42
-#endif
 
 /******* end debugger *******/
-
-
-mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
-clock_t startTime,endTime;
-double CurrentTime() {
-   return (double)(clock() - startTime) / CLOCKS_PER_SEC;
-}
-
 
 /*---pair---*/
 template<typename T1,typename T2>

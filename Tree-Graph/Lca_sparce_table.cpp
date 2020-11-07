@@ -1,110 +1,39 @@
-/*
-    author:savaliya_vivek
-    problem:Lowest Common Ancestor(TALCA)
-    link:https://www.codechef.com/problems/TALCA
-    tags:lac,sparce table,dfs,tree
-*/
 
-#include<bits/stdc++.h>
-using namespace std;
-#define PI pair<int,int>
-#define ff first
-#define ss second
-#define boost ios_base::sync_with_stdio(false);cin.tie(NULL)
-#define lv 20
+const int lv = 21;
+vector < vector < int > > g,sp;
+vector < int > sz;
 
-const int N = 1e5 + 5;
-vector<vector<int>>tree;
-int level[N],sparce[N][lv];
-
-void dfs(int u,int p)
-{
-    level[u]=level[p]+1;
-    sparce[u][0]=p;
-    for(int v:tree[u]){
-        if(v!=p)
-            dfs(v,u);
-    }
+void dfs(int u, int p) {
+	sp[u][0] = p;
+	for(int i = 1;  i < lv; i++)
+		sp[u][i] = sp[sp[u][i - 1]][i - 1];
+	sz[u] = sz[p] + 1;
+	for(int v : g[u]) {
+		if(v == p)
+			continue;
+		dfs(v, u);
+	}
 }
 
-void sparce_table(int n)
-{
-    for(int j=1;j<lv;j++)
-    {
-        for(int i=1;i<=n;i++)
-        {
-            if(sparce[i][j-1]!=-1)
-                sparce[i][j]=sparce[sparce[i][j-1]][j-1];
-        }
-    }
+int lca(int u, int v) {
+	if(sz[u] < sz[v])
+		swap(u, v);
+	int diff = sz[u] - sz[v];
+	for(int i = 0; i < lv; i++) {
+		if(diff & (1 << i))
+			u = sp[u][i];
+	} 
+	if(u == v)
+		return u;
+	for(int i = lv - 1; i >= 0; i--) {
+		if(sp[u][i] != sp[v][i]) {
+			u = sp[u][i];
+			v = sp[v][i];
+		}
+	}
+	return sp[u][0];
 }
 
-int lca(int u,int v)
-{
-    if(level[u]>level[v])
-        swap(u,v);
-    int d=level[v]-level[u];
-    for(int i=0;i<lv;i++)
-        if((d>>i)&1)
-            v=sparce[v][i];
-    if(v==u)
-        return u;
-    for(int i=lv-2;i>=0;i--)
-    {
-        if(sparce[u][i]!=sparce[v][i])
-        {
-            u=sparce[u][i];
-            v=sparce[v][i];
-        }
-    }
-    return sparce[u][0];
+int dist(int u, int v) {
+	return sz[u] + sz[v] - 2 * sz[lca(u, v)];
 }
-
-void built(int n)
-{
-    memset(level,0,sizeof level);
-    memset(sparce,-1,sizeof sparce);
-    dfs(1,0);
-    sparce_table(n);
-}
-
-int query(int u,int v,int r)
-{
-    int p=lca(u,v);
-    if(lca(p,r)!=p)
-        return p;
-    else if(lca(u,r)!=p)
-        return lca(u,r);
-    else if(lca(v,r)!=p)
-        return lca(v,r);
-    else
-        return p;
-}
-
-int32_t main()
-{
-    boost;
-    #ifndef ONLINE_JUDGE
-        freopen("input.txt","r",stdin);
-        freopen("output.txt","w",stdout);
-    #endif
-    
-    int n,q,u,v,r;
-    cin>>n;
-    tree.resize(n+1);   
-    for(int i=1;i<n;i++)
-    {
-        cin>>u>>v;
-        tree[u].push_back(v);
-        tree[v].push_back(u);
-    }
-    built(n);
-    cin>>q;
-    while(q--)
-    {
-        cin>>r>>u>>v;
-        int la=query(u,v,r);
-        cout<<la<<endl;
-    }
-}
- 
